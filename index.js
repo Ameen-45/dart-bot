@@ -6,14 +6,14 @@ const qrcode = require("qrcode-terminal");
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: { 
-        headless: true // headless for server deployment
+        headless: true // headless mode for server deployment (Railway)
     }
 });
 
 // Event: When QR code is received
 client.on("qr", qr => {
     console.log("Scan this QR code with your WhatsApp mobile app:");
-    qrcode.generate(qr, { small: true });
+    qrcode.generate(qr, { small: true }); // displays QR in terminal
 });
 
 // Event: When client is ready
@@ -44,7 +44,7 @@ client.on("message", async message => {
         return message.reply("Okay ooo 😎");
     }
 
-    // Predefined responses
+    // Predefined responses (case-insensitive)
     const responses = {
         "hi": "Hello 👋! This is Dart Bot. How can I help you today?",
         "hello": "Hello 👋! How can I help you today?",
