@@ -1,13 +1,12 @@
 // Import the required packages
-const { Client, LocalAuth } = require("whatsapp-web.js");
+const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 
 // Create WhatsApp client using LocalAuth (saves session)
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: { 
-        headless: true,
-        executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+        headless: true // headless for server deployment
     }
 });
 
@@ -46,8 +45,8 @@ client.on("message", async message => {
 
     // Predefined responses for common messages
     const responses = {
-        "hi": "Hello 👋! How are you?",
-        "hello": "Hello 👋! How are you?",
+        "hi": "Hello 👋! This is Dart Bot. How can I help you today?",
+        "hello": "Hello 👋! How can I help you today?",
         "hey": "Hey there! 😎",
         "how far": "I'm good! How about you?",
         "good morning": "Good morning 🌞! Have a great day!",
@@ -69,7 +68,12 @@ client.on("message", async message => {
         "okay": "Okay ooo 😎",
         "lol": "😄 Haha!",
         "haha": "😄 Haha!",
-        "hahaha": "😄 Haha!"
+        "hahaha": "😄 Haha!",
+        "gm": "Good morning 🌞! Have a productive day!",
+        "gn": "Good night 🌙! Sleep well!",
+        "good night": "Good night 🌙! Sweet dreams!",
+        "good afternoon": "Good afternoon! Hope your day is going well!",
+        "good evening": "Good evening! 😎",
     };
 
     // Check if message matches predefined responses
@@ -78,10 +82,10 @@ client.on("message", async message => {
         return message.reply(responses[text]);
     }
 
-    // Default reply for anything else
-    if (text) {
+    // Fallback reply for anything else (unrecognized message)
+    if (text || type === "chat") {
         await delay(800);
-        return message.reply("Okay ooo 😎");
+        return message.reply("This is Dart Bot. Dartwise will reply back soon! 😎");
     }
 });
 
