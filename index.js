@@ -13,7 +13,7 @@ const client = new Client({
 // Event: When QR code is received
 client.on("qr", qr => {
     console.log("Scan this QR code with your WhatsApp mobile app:");
-    qrcode.generate(qr, { small: true }); // displays QR in terminal
+    qrcode.generate(qr, { small: true });
 });
 
 // Event: When client is ready
@@ -26,14 +26,15 @@ client.on("message", async message => {
     // Ignore group messages
     if (message.from.includes("@g.us")) return;
 
-    // Get message type
     const type = message.type;
+    let text = "";
 
     // Ignore sensitive keywords
     const sensitiveKeywords = ["send acc", "send account", "about business"];
-    let text = "";
+
     if (type === "chat") {
         text = message.body.toLowerCase().trim();
+        if (!text) return; // ignore empty messages
         if (sensitiveKeywords.some(word => text.includes(word))) return; // ignore sensitive
     }
 
@@ -43,7 +44,7 @@ client.on("message", async message => {
         return message.reply("Okay ooo 😎");
     }
 
-    // Predefined responses for common messages
+    // Predefined responses
     const responses = {
         "hi": "Hello 👋! This is Dart Bot. How can I help you today?",
         "hello": "Hello 👋! How can I help you today?",
@@ -51,11 +52,13 @@ client.on("message", async message => {
         "how far": "I'm good! How about you?",
         "good morning": "Good morning 🌞! Have a great day!",
         "morning": "Good morning 🌞!",
+        "gm": "Good morning 🌞! Have a productive day!",
         "good afternoon": "Good afternoon! Hope your day is going well!",
         "afternoon": "Good afternoon! 😎",
         "good evening": "Good evening! How was your day?",
         "evening": "Good evening! 😎",
         "good night": "Good night 🌙! Sleep well!",
+        "gn": "Good night 🌙! Sleep tight!",
         "how are you": "I'm good, thank you! And you?",
         "what's up": "Not much 😎, how about you?",
         "whats up": "Not much 😎, how about you?",
@@ -68,21 +71,16 @@ client.on("message", async message => {
         "okay": "Okay ooo 😎",
         "lol": "😄 Haha!",
         "haha": "😄 Haha!",
-        "hahaha": "😄 Haha!",
-        "gm": "Good morning 🌞! Have a productive day!",
-        "gn": "Good night 🌙! Sleep well!",
-        "good night": "Good night 🌙! Sweet dreams!",
-        "good afternoon": "Good afternoon! Hope your day is going well!",
-        "good evening": "Good evening! 😎",
+        "hahaha": "😄 Haha!"
     };
 
-    // Check if message matches predefined responses
-    if (responses[text]) {
+    // Check predefined responses
+    if (text && responses[text]) {
         await delay(800);
         return message.reply(responses[text]);
     }
 
-    // Fallback reply for anything else (unrecognized message)
+    // Fallback reply for anything else
     if (text || type === "chat") {
         await delay(800);
         return message.reply("This is Dart Bot. Dartwise will reply back soon! 😎");
